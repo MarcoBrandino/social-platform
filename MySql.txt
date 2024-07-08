@@ -1,0 +1,33 @@
+# 1 - Seleziona gli utenti che hanno postato almeno un video GG
+select u.username 
+from users u 
+join medias m on u.id = m.user_id
+where m.`type` like 'video'
+group by u.username;
+
+# 2 - Seleziona tutti i post senza Like (13)
+select p.*
+from posts p
+left join likes l on p.id = l.post_id
+where l.post_id is null;
+
+# 3 - Conta il numero di like per ogni post (165) GG
+select p.id, p.title, count(l.user_id) as "numero like"
+from posts p
+left join likes l on p.id = l.post_id
+group by p.id, p.title;
+
+# 4 - Ordina gli utenti per il numero di media caricati (25) GG
+select u.username, count(m.user_id) as "media caricati"
+from users u 
+left join medias m on u.id = m.user_id
+group by u.username
+order by count(m.user_id);
+
+# 5 - Ordina gli utenti per totale di likes ricevuti nei loro posts (25) GG
+select u.username, count(l.user_id) as "totale like ricevuti"
+from users u 
+join likes l on u.id = l.user_id
+join posts p on l.post_id = p.id
+group by u.username
+order by count(l.user_id);
